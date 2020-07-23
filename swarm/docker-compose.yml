@@ -16,7 +16,7 @@ services:
       mode: replicated
       replicas: 1
       placement:
-        constraints: [node.hostname == centos-manager]      
+        constraints: [node.hostname == vm136]      
   zookeeper2:
     image: zookeeper
     hostname: zookeeper2
@@ -32,7 +32,7 @@ services:
       mode: replicated
       replicas: 1
       placement:
-        constraints: [node.hostname == centos-a]
+        constraints: [node.hostname == vm137]
   zookeeper3:
     image: zookeeper
     hostname: zookeeper3
@@ -48,7 +48,7 @@ services:
       mode: replicated
       replicas: 1
       placement:
-        constraints: [node.hostname == centos-b]
+        constraints: [node.hostname == vm138]
 
   nifi1:
     image: mkobit/nifi:1.1.0-oracle-java8
@@ -82,7 +82,7 @@ services:
       mode: replicated
       replicas: 1
       placement:
-        constraints: [node.hostname == centos-a]
+        constraints: [node.hostname == vm137]
   nifi2:
     image: mkobit/nifi:1.1.0-oracle-java8
     hostname: nifi2
@@ -115,7 +115,7 @@ services:
       mode: replicated
       replicas: 1
       placement:
-        constraints: [node.hostname == centos-b]
+        constraints: [node.hostname == vm138]
   nginx1:
     image: "nginx"
     ports:
@@ -126,7 +126,7 @@ services:
       mode: replicated
       replicas: 1
       placement:
-        constraints: [node.hostname == centos-a]
+        constraints: [node.hostname == vm137]
   nginx2:
     image: "nginx"
     ports:
@@ -137,4 +137,4 @@ services:
       mode: replicated
       replicas: 1
       placement:
-        constraints: [node.hostname == centos-b]
+        constraints: [node.hostname == vm138]
