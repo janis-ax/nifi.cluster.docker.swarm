@@ -121,7 +121,7 @@ services:
       - 8090:8090
     user: root
     environment:
-      - JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,address=8000,server=y,suspend=n
+      - JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,address=6000,server=y,suspend=n
     volumes:
       - /root/nifi.cluster.docker.swarm/nifi3/nifi.properties:/opt/nifi/conf/nifi.properties:ro
       - /root/nifi.cluster.docker.swarm/nifi3/bootstrap.conf:/opt/nifi/conf/bootstrap.conf:ro
@@ -146,10 +146,10 @@ services:
     image: mkobit/nifi:1.1.0-oracle-java8
     hostname: nifi4
     ports:
-      - 8095:8095
+      - 8081:8081
     user: root
     environment:
-      - JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,address=7000,server=y,suspend=n
+      - JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,address=5000,server=y,suspend=n
     volumes:
       - /root/nifi.cluster.docker.swarm/nifi4/nifi.properties:/opt/nifi/conf/nifi.properties:ro
       - /root/nifi.cluster.docker.swarm/nifi4/bootstrap.conf:/opt/nifi/conf/bootstrap.conf:ro
@@ -184,7 +184,7 @@ services:
   nginx4:
     image: "nginx"
     ports:
-      - "95:95"
+      - "81:81"
     volumes:
       - /root/nifi.cluster.docker.swarm/nginx4/:/etc/nginx/conf.d/:ro
     deploy:
