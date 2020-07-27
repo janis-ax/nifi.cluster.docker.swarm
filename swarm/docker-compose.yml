@@ -1,4 +1,4 @@
-version: '3'
+version: "3"
 
 services:
   zookeeper1:
@@ -11,7 +11,7 @@ services:
       mode: replicated
       replicas: 1
       placement:
-        constraints: [node.hostname == vm136]      
+        constraints: [node.hostname == vm136]
   zookeeper2:
     image: zookeeper
     hostname: zookeeper2
@@ -114,7 +114,7 @@ services:
       placement:
         constraints: [node.hostname == vm137]
 
-nifi3:
+  nifi3:
     image: mkobit/nifi:1.1.0-oracle-java8
     hostname: nifi3
     ports:
