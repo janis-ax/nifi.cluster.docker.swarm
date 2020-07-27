@@ -99,7 +99,7 @@ Before we can start the swarm we need to do 2 things
 
 #### Clone this repo in /root/
 
-    git clone https://github.com/ddewaele/nifi.cluster.docker.swarm.git
+    git clone https://github.com/janis-ax/nifi.cluster.docker.swarm.git
 
 #### Create mount points on all nodes
 

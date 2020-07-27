@@ -7,11 +7,6 @@ services:
     environment:
       - ZOO_MY_ID=1
       - ZOO_SERVERS=server.1=0.0.0.0:2888:3888;2181 server.2=zookeeper2:2888:3888;2181 server.3=zookeeper3:2888:3888;2181
-#    healthcheck:
-#      test: ["CMD", "/zookeeper-3.4.9/bin/zkServer.sh","status"]
-#      interval: 30s
-#      timeout: 10s
-#      retries: 300
     deploy:
       mode: replicated
       replicas: 1
@@ -23,11 +18,6 @@ services:
     environment:
       - ZOO_MY_ID=2
       - ZOO_SERVERS=server.1=zookeeper1:2888:3888;2181 server.2=0.0.0.0:2888:3888;2181 server.3=zookeeper3:2888:3888;2181
-#    healthcheck:
-#      test: ["CMD", "/zookeeper-3.4.9/bin/zkServer.sh","status"]
-#      interval: 30s
-#      timeout: 10s
-#      retries: 300
     deploy:
       mode: replicated
       replicas: 1
@@ -39,11 +29,6 @@ services:
     environment:
       - ZOO_MY_ID=3
       - ZOO_SERVERS=server.1=zookeeper1:2888:3888;2181 server.2=zookeeper2:2888:3888;2181 server.3=0.0.0.0:2888:3888;2181
-#    healthcheck:
-#      test: ["CMD", "/zookeeper-3.4.9/bin/zkServer.sh","status"]
-#      interval: 30s
-#      timeout: 10s
-#      retries: 300
     deploy:
       mode: replicated
       replicas: 1
@@ -69,11 +54,6 @@ services:
       - /srv/nifi/work:/opt/nifi/work:Z
       - /srv/nifi/logs:/opt/nifi/logs:Z
       - /tmp/data:/tmp/data:Z
-#    healthcheck:
-#      test: ["CMD", "wget","-q","http://localhost:8080","-O","/dev/null"]
-#      interval: 30s
-#      timeout: 10s
-#      retries: 300
     depends_on:
       - zookeeper1
       - zookeeper2
@@ -82,7 +62,7 @@ services:
       mode: replicated
       replicas: 1
       placement:
-        constraints: [node.hostname == vm137]
+        constraints: [node.hostname == vm136]
   nifi2:
     image: mkobit/nifi:1.1.0-oracle-java8
     hostname: nifi2
@@ -102,11 +82,6 @@ services:
       - /srv/nifi/work:/opt/nifi/work:Z
       - /srv/nifi/logs:/opt/nifi/logs:Z
       - /tmp/data:/tmp/data:Z
-#    healthcheck:
-#      test: ["CMD", "wget","-q","http://localhost:8085","-O","/dev/null"]
-#      interval: 30s
-#      timeout: 10s
-#      retries: 300
     depends_on:
       - zookeeper1
       - zookeeper2
@@ -115,7 +90,7 @@ services:
       mode: replicated
       replicas: 1
       placement:
-        constraints: [node.hostname == vm138]
+        constraints: [node.hostname == vm137]
   nginx1:
     image: "nginx"
     ports:
@@ -126,7 +101,7 @@ services:
       mode: replicated
       replicas: 1
       placement:
-        constraints: [node.hostname == vm137]
+        constraints: [node.hostname == vm136]
   nginx2:
     image: "nginx"
     ports:
@@ -137,4 +112,83 @@ services:
       mode: replicated
       replicas: 1
       placement:
+        constraints: [node.hostname == vm137]
+
+nifi3:
+    image: mkobit/nifi:1.1.0-oracle-java8
+    hostname: nifi3
+    ports:
+      - 8080:8080
+    user: root
+    environment:
+      - JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,address=8000,server=y,suspend=n
+    volumes:
+      - /root/nifi.cluster.docker.swarm/nifi3/nifi.properties:/opt/nifi/conf/nifi.properties:ro
+      - /root/nifi.cluster.docker.swarm/nifi3/bootstrap.conf:/opt/nifi/conf/bootstrap.conf:ro
+      - /srv/nifi/flow:/opt/nifi/flow:Z
+      - /srv/nifi/content_repository:/opt/nifi/content_repository:Z
+      - /srv/nifi/database_repository:/opt/nifi/database_repository:Z
+      - /srv/nifi/flowfile_repository:/opt/nifi/flowfile_repository:Z
+      - /srv/nifi/provenance_repository:/opt/nifi/provenance_repository:Z
+      - /srv/nifi/work:/opt/nifi/work:Z
+      - /srv/nifi/logs:/opt/nifi/logs:Z
+      - /tmp/data:/tmp/data:Z
+    depends_on:
+      - zookeeper1
+      - zookeeper2
+      - zookeeper3
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
         constraints: [node.hostname == vm138]
+  nifi4:
+    image: mkobit/nifi:1.1.0-oracle-java8
+    hostname: nifi4
+    ports:
+      - 8085:8085
+    user: root
+    environment:
+      - JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,address=7000,server=y,suspend=n
+    volumes:
+      - /root/nifi.cluster.docker.swarm/nifi4/nifi.properties:/opt/nifi/conf/nifi.properties:ro
+      - /root/nifi.cluster.docker.swarm/nifi4/bootstrap.conf:/opt/nifi/conf/bootstrap.conf:ro
+      - /srv/nifi/flow:/opt/nifi/flow:Z
+      - /srv/nifi/content_repository:/opt/nifi/content_repository:Z
+      - /srv/nifi/database_repository:/opt/nifi/database_repository:Z
+      - /srv/nifi/flowfile_repository:/opt/nifi/flowfile_repository:Z
+      - /srv/nifi/provenance_repository:/opt/nifi/provenance_repository:Z
+      - /srv/nifi/work:/opt/nifi/work:Z
+      - /srv/nifi/logs:/opt/nifi/logs:Z
+      - /tmp/data:/tmp/data:Z
+    depends_on:
+      - zookeeper1
+      - zookeeper2
+      - zookeeper3
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.hostname == vm139]
+  nginx3:
+    image: "nginx"
+    ports:
+      - "80:80"
+    volumes:
+      - /root/nifi.cluster.docker.swarm/nginx3/:/etc/nginx/conf.d/:ro
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.hostname == vm138]
+  nginx4:
+    image: "nginx"
+    ports:
+      - "85:85"
+    volumes:
+      - /root/nifi.cluster.docker.swarm/nginx4/:/etc/nginx/conf.d/:ro
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.hostname == vm139]
